@@ -8,7 +8,9 @@ for extracurricular activities at Mergington High School.
 from fastapi import FastAPI, HTTPException
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import RedirectResponse
+from pydantic import BaseModel
 import os
+import random
 from pathlib import Path
 
 app = FastAPI(title="Mergington High School API",
@@ -45,6 +47,31 @@ activities = {
 @app.get("/")
 def root():
     return RedirectResponse(url="/static/index.html")
+
+
+class QuoteResponse(BaseModel):
+    quote: str
+    author: str
+
+
+MOTIVATIONAL_QUOTES = [
+    {"quote": "The secret of getting ahead is getting started.", "author": "Mark Twain"},
+    {"quote": "It always seems impossible until it's done.", "author": "Nelson Mandela"},
+    {"quote": "Don't watch the clock; do what it does. Keep going.", "author": "Sam Levenson"},
+    {"quote": "Believe you can and you're halfway there.", "author": "Theodore Roosevelt"},
+    {"quote": "You are never too old to set another goal or to dream a new dream.", "author": "C.S. Lewis"},
+    {"quote": "The future belongs to those who believe in the beauty of their dreams.", "author": "Eleanor Roosevelt"},
+    {"quote": "Success is not final, failure is not fatal: it is the courage to continue that counts.", "author": "Winston Churchill"},
+    {"quote": "Education is the most powerful weapon which you can use to change the world.", "author": "Nelson Mandela"},
+    {"quote": "In the middle of every difficulty lies opportunity.", "author": "Albert Einstein"},
+    {"quote": "Strive for progress, not perfection.", "author": "Unknown"},
+]
+
+
+@app.get("/quote", response_model=QuoteResponse)
+def get_motivational_quote():
+    """Return a random motivational quote"""
+    return random.choice(MOTIVATIONAL_QUOTES)
 
 
 @app.get("/activities")
