@@ -3,6 +3,25 @@ document.addEventListener("DOMContentLoaded", () => {
   const activitySelect = document.getElementById("activity");
   const signupForm = document.getElementById("signup-form");
   const messageDiv = document.getElementById("message");
+  const quoteText = document.getElementById("quote-text");
+  const quoteAuthor = document.getElementById("quote-author");
+  const newQuoteBtn = document.getElementById("new-quote-btn");
+
+  // Function to fetch a motivational quote from the API
+  async function fetchQuote() {
+    try {
+      const response = await fetch("/quote");
+      const data = await response.json();
+      quoteText.textContent = `"${data.quote}"`;
+      quoteAuthor.textContent = `— ${data.author}`;
+    } catch (error) {
+      quoteText.textContent = "Stay motivated and keep going!";
+      quoteAuthor.textContent = "";
+      console.error("Error fetching quote:", error);
+    }
+  }
+
+  newQuoteBtn.addEventListener("click", fetchQuote);
 
   // Function to fetch activities from API
   async function fetchActivities() {
@@ -82,5 +101,6 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // Initialize app
+  fetchQuote();
   fetchActivities();
 });
